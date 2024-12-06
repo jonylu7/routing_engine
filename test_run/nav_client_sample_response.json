@@ -1,0 +1,19 @@
+{
+    "node_sequence":["123_123","123_456","456_456"],
+    "graph":{
+    "123_123":{
+        "local_location":[123,123,213],
+        "action":"something"
+    },
+    "123_456":{
+        "local_location":[123,123,213],
+        "action":"something"
+    },
+    "456_456":{
+        "local_location":[123,123,213],
+        "action":"something"
+    }
+
+}
+
+}
