@@ -1,11 +1,11 @@
-import WaypointGraph
+from routing_agent.WaypointGraph import WaypointGraph
 import elkai
 import numpy as np
-from Node import Node
-import FindPath
-from ConvertDataFormat import loadJSONFile
-from Task import Task,loadTasksData
-from Vehicle import Vehicle,loadVehiclesData
+from routing_agent.Node import Node
+import routing_agent.FindPath as FindPath
+from routing_agent.ConvertDataFormat import loadJSONFile
+from routing_agent.Task import Task,loadTasksData
+from routing_agent.Vehicle import Vehicle,loadVehiclesData
 
 def convertNodeListToNodeIndex(nodeList:list,nodeIndex):
     newList=[]
@@ -181,9 +181,9 @@ class RoutingEngine:
 
 def testRoutingEngine():
     graph=WaypointGraph.testLoadMap()
-    vehdata=loadJSONFile("/home/csl/ros2_ws/test_run/sample_data/vehicle_data.json")
+    vehdata=loadJSONFile("../../test_run/sample_data/vehicle_data.json")
     vehicles=loadVehiclesData(graph,vehdata)
-    taskdata=loadJSONFile("/home/csl/ros2_ws/test_run/sample_data/task_data.json")
+    taskdata=loadJSONFile("../../test_run/sample_data/task_data.json")
     tasks=loadTasksData(graph,taskdata)
     re=RoutingEngine(graph,tasks,vehicles)
     print(re.update("000_000"))

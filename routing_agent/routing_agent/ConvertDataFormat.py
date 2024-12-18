@@ -1,6 +1,6 @@
 import json
 import numpy as np
-import FindPath
+import routing_agent.FindPath
 import yaml
 
 

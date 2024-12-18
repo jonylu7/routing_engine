@@ -1,10 +1,10 @@
-from Vector import Vector3
-from Node import Node,convertToNodeId,convertJSONnodeToNode,calculateDistanceBetweenNodes,generateNodeId,connectTwoNodes
-import ConvertDataFormat
-from ConvertDataFormat import loadJSONFile,saveJSONAt,loadYAMLFile
+from routing_agent.Vector import Vector3
+from routing_agent.Node import Node,convertToNodeId,convertJSONnodeToNode,calculateDistanceBetweenNodes,generateNodeId,connectTwoNodes
+import routing_agent.ConvertDataFormat
+from routing_agent.ConvertDataFormat import loadJSONFile,saveJSONAt,loadYAMLFile
 from pathlib import Path
-import FindPath
-import PreprocessToolkit
+import routing_agent.FindPath as FindPath
+import routing_agent.PreprocessToolkit
 class WaypointGraph:
     graph={}
     def __init__(self,nodeid:list[str]=[],nodes:list[Node]=[]):
@@ -169,7 +169,7 @@ def loadWaypointGraphData(waypointgraphdata:dict)->WaypointGraph:
 
 
 def testLoadMap():
-    data=loadJSONFile("/home/csl/ros2_ws/test_run/sample_data/waypointgraph.json")
+    data=loadJSONFile("../../test_run/sample_data/waypointgraph.json")
     graph=loadWaypointGraphData(data)
     #print(convertWaypointGraphToJSON(graph))
     return graph

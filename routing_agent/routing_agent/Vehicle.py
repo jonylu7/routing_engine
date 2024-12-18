@@ -1,4 +1,4 @@
-from WaypointGraph import WaypointGraph
+from routing_agent.WaypointGraph import WaypointGraph
 class Vehicle:
     def __init__(self,locationnode,capcity=1):
         self.locationNode=locationnode

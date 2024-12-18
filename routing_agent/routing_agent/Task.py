@@ -1,5 +1,5 @@
-from WaypointGraph import WaypointGraph
-from Vehicle import Vehicle
+from routing_agent.WaypointGraph import WaypointGraph
+from routing_agent.Vehicle import Vehicle
 class Task:
     def __init__(self,locationnode,demand=1):
         self.locationNode=locationnode

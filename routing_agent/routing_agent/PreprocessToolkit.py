@@ -1,4 +1,4 @@
-from Vector import Vector3
+from routing_agent.Vector import Vector3
 import math
 
 def generate_intermediate_nodes_index(startVector, endVector, spacing):
