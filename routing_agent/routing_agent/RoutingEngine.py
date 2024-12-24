@@ -32,7 +32,6 @@ class RoutingEngine:
     occupiedEdgeMatrix:np.array
     taskSequence:list=[]
     latestSolutionPath:list=[]
-    routeAtNextUpdate=False
     def __init__(self,waypointgraph:WaypointGraph,tasklist:list,initfleet:list[Vehicle]):
         self.nodeIndex,self.distanceMatrix=waypointgraph.convertToDistanceMatrix()
         self.waypointGraph=waypointgraph
@@ -43,6 +42,7 @@ class RoutingEngine:
         self.taskList=tasklist
         self.fleet=initfleet
         self.solve()
+        self.findAllPathForTask()
 
     def __solveTSP(self):
         goThoughNodes=self.taskList
@@ -67,16 +67,21 @@ class RoutingEngine:
             solutionId=[]
             for index in costMatrixSol:
                 solutionId.append(self.nodeIndex[index])
-            self.routeAtNextUpdate=True
             self.taskSequence=solutionId
         elif(len(self.taskList)==1):
-            self.routeAtNextUpdate=True
             self.taskSequence=[self.fleet[0].locationNode.id,self.taskList[0].locationNode.id,self.fleet[0].locationNode.id]
         else:
             raise KeyError("Failed to solve, Not Enough Task in Task list")
 
         return self.taskSequence
-    
+
+
+    def findAllPathForTask(self):
+        if(len(self.taskSequence)>2):
+            for i in range(1,len(self.taskSequence),1):
+                idPath, distanceEstimates = self.findPathBetweenTwoPoints(self.taskSequence[i-1], self.taskSequence[i])
+                self.latestSolutionPath += idPath[:-1]
+            self.latestSolutionPath.append(self.taskSequence[-1])
 
     def findPathBetweenTwoPoints(self,fromnodeid:str,tonodeid:str):
         if(fromnodeid==tonodeid):
@@ -112,30 +117,22 @@ class RoutingEngine:
         return sol
 
     def update(self,currentnodeid):
-        # route
-        if(self.routeAtNextUpdate or len(self.latestSolutionPath)==1):
-            #print(self.taskSequence)
-            if(currentnodeid in self.taskSequence):
-                self.taskSequence.pop(self.taskSequence.index(currentnodeid))
 
-            if(len(self.taskSequence)==0):
-                self.latestSolutionPath=[]
-                print("Finished All Tasks")
-                return []
-            
-            nextTaskId=self.taskSequence[0]
-            idPath,distanceEstimates=self.findPathBetweenTwoPoints(currentnodeid,nextTaskId)
-            self.latestSolutionPath=idPath
-            self.routeAtNextUpdate=False
-        #print("Y")
-        #print(self.latestSolutionPath)
-        #update solutionpath
+        # route
+        if(currentnodeid in self.taskSequence):
+            self.taskSequence.pop(self.taskSequence.index(currentnodeid))
+
         if(currentnodeid in self.latestSolutionPath):
             startindex=self.latestSolutionPath.index(currentnodeid)
             self.latestSolutionPath=self.latestSolutionPath[startindex+1::]
-        else:
-            raise KeyError("You derail from the path!")
+
+        if(len(self.taskSequence)==0):
+            self.latestSolutionPath=[]
+            print("Finished All Tasks")
+            return []
+
         return self.latestSolutionPath
+
 
     def response(self):
 
@@ -191,7 +188,11 @@ def testRoutingEngine():
     print(re.update("000_003"))
     print(re.response())
     print(re.update("001_006"))
+    print(re.response())
     print(re.update("002_001"))
+    print(re.response())
+    print(re.update("000_000"))
+    print(re.response())
 
 
 if __name__=="__main__":
