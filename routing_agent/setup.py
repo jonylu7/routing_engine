@@ -13,6 +13,7 @@ setup(
         ('share/' + package_name, ['launch/InitAndRun.launch.py']),
          ('share/' + package_name, ['launch/RunServer.launch.py']),
         ('lib/' + package_name, [package_name+'/ConvertDataFormat.py']),
+         ('lib/' + package_name, ['test/test_routingengine.py']),
         ('lib/' + package_name, [package_name+'/FindPath.py']),
         ('lib/' + package_name, [package_name+'/Task.py']),
         ('lib/' + package_name, [package_name+'/Vehicle.py']),
