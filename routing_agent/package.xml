@@ -8,6 +8,7 @@
   <license>Apache-2.0</license>
 
   <depend>rclpy</depend>
+  <depend>elkai</depend>
   <depend>routing_agent_interfaces</depend>
   <depend>rosidl_runtime_py</depend>
 

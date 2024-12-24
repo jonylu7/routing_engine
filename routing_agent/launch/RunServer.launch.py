@@ -15,8 +15,8 @@ def generate_launch_description():
 
     runServer=ExecuteProcess(cmd=[['ros2 run routing_agent server']],shell=True)
 
-    loadGraphArg=ExecuteProcess(cmd=[['ros2 run routing_agent loadGraph test_run/sample_data/waypointgraph.json']],shell=True)
-    loadTaskAndVehicleArg=ExecuteProcess(cmd=[['ros2 run routing_agent routingClient test_run/sample_data/task_data.json test_run/sample_data/vehicle_data.json']],shell=True)
+    loadGraphArg=ExecuteProcess(cmd=[['ros2 run routing_agent loadGraph src/routing_engine/test_run/sample_data/waypointgraph.json']],shell=True)
+    loadTaskAndVehicleArg=ExecuteProcess(cmd=[['ros2 run routing_agent routingClient src/routing_engine/test_run/sample_data/task_data.json src/routing_engine/test_run/sample_data/vehicle_data.json']],shell=True)
 
     # Define dependencies using event handlers
     process_2_after_1 = RegisterEventHandler(
