@@ -181,9 +181,9 @@ class RoutingEngine:
 
 def testRoutingEngine():
     graph=WaypointGraph.testLoadMap()
-    vehdata=loadJSONFile("/home/csl/ros2_ws/test_run/sample_data/vehicle_data.json")
+    vehdata=loadJSONFile("test_run/sample_data/vehicle_data.json")
     vehicles=loadVehiclesData(graph,vehdata)
-    taskdata=loadJSONFile("/home/csl/ros2_ws/test_run/sample_data/task_data.json")
+    taskdata=loadJSONFile("test_run/sample_data/task_data.json")
     tasks=loadTasksData(graph,taskdata)
     re=RoutingEngine(graph,tasks,vehicles)
     print(re.update("000_000"))

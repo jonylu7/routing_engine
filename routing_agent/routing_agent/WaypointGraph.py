@@ -169,7 +169,7 @@ def loadWaypointGraphData(waypointgraphdata:dict)->WaypointGraph:
 
 
 def testLoadMap():
-    data=loadJSONFile("/home/csl/ros2_ws/test_run/sample_data/waypointgraph.json")
+    data=loadJSONFile("test_run/sample_data/waypointgraph.json")
     graph=loadWaypointGraphData(data)
     #print(convertWaypointGraphToJSON(graph))
     return graph
