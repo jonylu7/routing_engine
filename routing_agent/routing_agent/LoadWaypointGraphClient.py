@@ -2,7 +2,7 @@ from routing_agent_interfaces.srv import LoadWaypointGraphServiceMsg            
 import sys
 import rclpy
 from rclpy.node import Node
-import ConvertDataFormat
+import routing_agent.utils.ConvertDataFormat as ConvertDataFormat
 import json
 
 
@@ -17,8 +17,11 @@ class LoadWaypointGraphClient(Node):
         
                                            # CHANG
 
-    def send_request(self):
-        self.req.waypoint_graph_data=ConvertDataFormat.loadJSONFileToStr(sys.argv[1])
+    def send_request(self,arg:list=None):
+        if(arg!=None):
+            self.req.waypoint_graph_data=ConvertDataFormat.loadJSONFileToStr(sys.argv[1])
+        else:
+            self.req.waypoint_graph_data=ConvertDataFormat.loadJSONFileToStr(arg[0])
         self.future = self.cli.call_async(self.req)
         
 

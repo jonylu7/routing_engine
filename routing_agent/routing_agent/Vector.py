@@ -13,9 +13,6 @@ class Vector3:
             return True
         else:
             return False
-
-
     def toList(self):
         return [self.x,self.y,self.z]
-def calculateDistance(source:Vector3,destination:Vector3):
-    return((source.x-destination.x)**2+(source.y-destination.y)**2+(source.z-destination.z)**2)**0.5
+

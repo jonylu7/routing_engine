@@ -2,7 +2,7 @@ from routing_agent_interfaces.srv import RoutingServiceMsg               # CHANG
 import sys
 import rclpy
 from rclpy.node import Node
-import ConvertDataFormat
+import routing_agent.utils.ConvertDataFormat as ConvertDataFormat
 
 
 class RoutingClient(Node):
@@ -15,9 +15,13 @@ class RoutingClient(Node):
         self.req = RoutingServiceMsg.Request()
         
 
-    def send_request(self):
-        orders_file_location=sys.argv[1]
-        vehicle_data_location=sys.argv[2]
+    def send_request(self,arg:list=None):
+        if(arg!=None):
+            orders_file_location=sys.argv[1]
+            vehicle_data_location=sys.argv[2]
+        else:
+            orders_file_location=arg[0]
+            vehicle_data_location=arg[1]
         self.req.task_data,self.req.vehicle_data=self.readFiles(orders_file_location,vehicle_data_location)
         self.future = self.cli.call_async(self.req)
 

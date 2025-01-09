@@ -1,14 +1,11 @@
 from routing_agent_interfaces.srv import RoutingServiceMsg,MergeWaypointGraphServiceMsg,LoadWaypointGraphServiceMsg,NavServiceMsg  # CHANGE
 import rclpy
-
 from rclpy.node import Node
-import routing_agent.RoutingAgent as RoutingAgent
 import json
-from ConvertDataFormat import convertJSONToStr,convertStrToJSON,saveJSONAt
-from WaypointGraph import WaypointGraph,mergeWaypointGraph,loadWaypointGraphData
+from routing_agent.utils.ConvertDataFormat import convertJSONToStr,convertStrToJSON,saveJSONAt
+from WaypointGraph import WaypointGraph,mergeWaypointGraph
 from RoutingEngine import RoutingEngine
-from Task import loadTasksData
-from Vehicle import loadVehiclesData
+from LoadToolkit import loadTasksData,loadVehiclesData,loadWaypointGraphData
 import sys
 
 class RoutingServer(Node):

@@ -1,7 +1,7 @@
 
 import json
-import FindPath
-import WaypointGraph
+from routing_agent.utils.FindPath import *
+import routing_agent.WaypointGraph
 
 def generateSolution(pathMatrix, costMatrixSol):
     solutionPath=[]

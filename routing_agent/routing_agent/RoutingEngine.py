@@ -2,32 +2,11 @@ import WaypointGraph
 import elkai
 import numpy as np
 from Node import Node
-import FindPath
-from ConvertDataFormat import loadJSONFile
-from Task import Task,loadTasksData
-from Vehicle import Vehicle,loadVehiclesData
-
-def convertNodeListToNodeIndex(nodeList:list,nodeIndex):
-    newList=[]
-    for node in nodeList:
-        if(type(node)==Vehicle or type(node)==Task):
-            newList.append(nodeIndex.index(node.locationNode.id))
-        elif(type(node)==Node):
-             newList.append(nodeIndex.index(node.id))
-    return newList
-
-def findIdInNodeList(nodeList:list,nodeId):
-    found=-1
-    for index,node in enumerate(nodeList):
-        if(type(node)==Vehicle or type(node)==Task):
-            if(node.locationNode.id==nodeId):
-                found=index
-        elif(type(node)==Node):
-             if(node.id==nodeId):
-                 found=index
-    return found
-
-
+from routing_agent.utils.PreprocessToolkit import *
+from Task import Task
+from Vehicle import Vehicle
+from LoadToolkit import *
+import routing_agent.utils.FindPath as FindPath
 class RoutingEngine:
     occupiedEdgeMatrix:np.array
     taskSequence:list=[]
@@ -177,10 +156,11 @@ class RoutingEngine:
             self.occupiedDijGraph[node2Index][node1Index]=float('inf')
 
 def testRoutingEngine():
-    graph=WaypointGraph.testLoadMap()
-    vehdata=loadJSONFile("test_run/sample_data/vehicle_data.json")
+    graphdata=loadJSONFile("../../test_run/sample_data/waypointgraph.json")
+    graph=loadWaypointGraphData(graphdata)
+    vehdata=loadJSONFile("../../test_run/sample_data/vehicle_data.json")
     vehicles=loadVehiclesData(graph,vehdata)
-    taskdata=loadJSONFile("test_run/sample_data/task_data.json")
+    taskdata=loadJSONFile("../../test_run/sample_data/task_data.json")
     tasks=loadTasksData(graph,taskdata)
     re=RoutingEngine(graph,tasks,vehicles)
     print(re.update("000_000"))

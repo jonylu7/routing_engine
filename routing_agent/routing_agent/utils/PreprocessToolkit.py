@@ -1,61 +1,10 @@
-import json
 import numpy as np
-import FindPath
-import yaml
+from routing_agent.Task import Task
+from routing_agent.Vehicle import Vehicle
+from routing_agent.Node import Node
 
-
-def loadJSONFile(file_path):
-    with open(file_path, 'r') as file:
-        data = json.load(file)
-    return data
-
-def loadYAMLFile(file_path):
-    with open(file_path, 'r') as file:
-        data = yaml.safe_load(file)
-    return data
-
-def loadJSONFileToStr(file_path):
-    data=loadJSONFile(file_path)
-    data=json.dumps(data)
-    return data
-
-def convertJSONToStr(jsondata:dict):
-    return json.dumps(jsondata)
-
-def convertStrToJSON(str:str)->dict:
-    return json.loads(str)
-
-def saveJSONAt(jsondata:dict,path:str):
-    try:
-        with open(path, "w+") as f:
-            json.dump(jsondata, f)
-    except:
-        raise KeyError("Failed to save file")
-
-
-def convertGraphFileToCSR(graphfile):
-    num_nodes = len(graphfile["graph"])
-    offsets = []
-    edges = []
-
-    cur_offset = 0
-    for node in range(num_nodes):
-        offsets.append(cur_offset)
-        cur_offset += len(graphfile["graph"][str(node)]["edges"])
-        edges = edges + graphfile["graph"][str(node)]["edges"]
-
-    offsets.append(cur_offset)
-    return  np.array(edges),np.array(offsets)
-
-
-def calculateGraphWeightByFile(graphfile):
-    weights=[]
-    for startnode in graphfile["graph"]:
-        for endnode in graphfile["graph"][startnode]["edges"]:
-            startlocation=graphfile["node_locations"][int(startnode)]
-            endlocation=graphfile["node_locations"][int(endnode)]
-            weights.append(calculateDistance(startlocation,endlocation))
-    return weights
+from routing_agent.Vector import Vector3
+from routing_agent.utils.ConvertDataFormat import *
 
 def caluclateGraphWeightByValue(waypoint_graph_locations,waypoint_graph_edges,waypoint_graph_offsets):
     nodeLen=int(len(waypoint_graph_locations)/3)
@@ -69,7 +18,7 @@ def caluclateGraphWeightByValue(waypoint_graph_locations,waypoint_graph_edges,wa
 
         endNodes=waypoint_graph_edges[offset:nextoffset]
         startlocation=waypoint_graph_locations[startnode*3:startnode*3+3]
-        if(len(endNodes)==0):
+        if(len(endNodes)==                                                                                                                                                             0):
             continue
         for endnode in endNodes:
             endlocation=waypoint_graph_locations[endnode*3:endnode*3+3]
@@ -204,3 +153,149 @@ def convertMatrixToCSR(matrix):
         valueList=valueList+row
 
     return valueList,offsets
+
+
+
+def convertNodeListToNodeIndex(nodeList:list,nodeIndex):
+    newList=[]
+    for node in nodeList:
+        if(type(node)==Vehicle or type(node)==Task):
+            newList.append(nodeIndex.index(node.locationNode.id))
+        elif(type(node)==Node):
+             newList.append(nodeIndex.index(node.id))
+    return newList
+
+def findIdInNodeList(nodeList:list,nodeId):
+    found=-1
+    for index,node in enumerate(nodeList):
+        if(type(node)==Vehicle or type(node)==Task):
+            if(node.locationNode.id==nodeId):
+                found=index
+        elif(type(node)==Node):
+             if(node.id==nodeId):
+                 found=index
+    return found
+
+
+def calculateDistance(source:Vector3,destination:Vector3):
+    return((source.x-destination.x)**2+(source.y-destination.y)**2+(source.z-destination.z)**2)**0.5
+
+
+
+def exportAsCuOptFormat(routes,solutionCost,exportlocation):
+
+    # Data to be written
+    vehdata={"Veh-A":{"task_id": ["Depot", "0", "Break", "4", "Depot"],
+                    "arrival_stamp": [6.0, 7.0, 20.0, 21.0, 29.0],
+                    "route": routes,
+                    "type": ["Depot", "Delivery", "w", "w", "w", "w", "w", "Break", "Delivery", "w", "w", "w", "Depot"]},
+             "Veh-B": {"task_id": ["Depot", "0", "Break", "4", "Depot"],
+                       "arrival_stamp": [6.0, 7.0, 20.0, 21.0, 29.0],
+                       "route": routes,
+                       "type": ["Depot", "Delivery", "w", "w", "w", "w", "w", "Break", "Delivery", "w", "w", "w",
+                                "Depot"]}
+             }
+
+    data = {
+        "response":{
+            "solver_response":{
+                "status": 0,
+                "num_vehicles": 3,
+                "solution_cost": solutionCost,
+                "vehicle_data":vehdata,
+                "dropped_tasks": {
+              "task_id": [],
+              "task_index": []
+            },
+            "msg": ""
+            },
+        "reqId": "Ass"
+    }
+    }
+
+    # Serializing json
+    json_object = json.dumps(data, indent=2)
+
+    # Writing to sample.json
+    with open(exportlocation, "w") as outfile:
+        outfile.write(json_object)
+
+
+def exportResponse():
+    data={
+        
+    }
+
+    json_data = json.dumps(data, indent=2)
+    return str(json_data)
+
+
+
+
+def generateNodeId(mapindex,nodeindex):
+    nodeId = "{:03}".format(mapindex) + "_" + "{:03}".format(nodeindex)
+    return nodeId
+
+def convertToNodeId(mapid:any,nodeindex:any)->str:
+    mapname,mapindex=mapid.split("_")
+    if(type(nodeindex)==str):
+        nodeindex=int(nodeindex)
+    if(type(mapindex)==str):
+        mapindex=int(mapindex)
+    nodeId="{:03}".format(mapindex)+"_"+"{:03}".format(nodeindex)
+    return nodeId
+
+def getMapIdByNodeId(nodeid):
+    mapid,_=nodeid.split("_")
+    return mapid
+
+def convertJSONnodeToNode(id,nodedata):
+    x=float(nodedata["local_location"][0])
+    y=float(nodedata["local_location"][1])
+    z=float(nodedata["local_location"][2])
+    location=Vector3(x,y,z)
+    mapId=getMapIdByNodeId(id)
+    return Node(id,location,mapId,nodedata["edges"])
+
+def calculateDistanceBetweenNodes(node1:Node,node2:Node):
+    return calculateDistance(node1.localLocation,node2.localLocation)
+
+def connectTwoNodes(node1:Node,node2:Node):
+    if(len(node1.edges)==0):
+        node1.edges=[node2.id]
+    else:
+        node1.edges.append(node2.id)
+
+    if (len(node2.edges) == 0):
+        node2.edges = [node1.id]
+    else:
+        node2.edges.append(node1.id)
+
+    #return node1,node2
+
+
+
+
+def convertGraphFileToCSR(graphfile):
+    num_nodes = len(graphfile["graph"])
+    offsets = []
+    edges = []
+
+    cur_offset = 0
+    for node in range(num_nodes):
+        offsets.append(cur_offset)
+        cur_offset += len(graphfile["graph"][str(node)]["edges"])
+        edges = edges + graphfile["graph"][str(node)]["edges"]
+
+    offsets.append(cur_offset)
+    return  np.array(edges),np.array(offsets)
+
+
+def calculateGraphWeightByFile(graphfile):
+    weights=[]
+    for startnode in graphfile["graph"]:
+        for endnode in graphfile["graph"][startnode]["edges"]:
+            startlocation=graphfile["node_locations"][int(startnode)]
+            endlocation=graphfile["node_locations"][int(endnode)]
+            weights.append(calculateDistance(startlocation,endlocation))
+    return weights

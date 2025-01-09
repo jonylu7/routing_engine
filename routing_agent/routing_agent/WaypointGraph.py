@@ -1,10 +1,8 @@
 from Vector import Vector3
-from Node import Node,convertToNodeId,convertJSONnodeToNode,calculateDistanceBetweenNodes,generateNodeId,connectTwoNodes
-import ConvertDataFormat
-from ConvertDataFormat import loadJSONFile,saveJSONAt,loadYAMLFile
-from pathlib import Path
-import FindPath
-import PreprocessToolkit
+from Node import Node
+from utils.PreprocessToolkit import *
+import routing_agent.utils.FindPath as FindPath
+
 class WaypointGraph:
     graph={}
     def __init__(self,nodeid:list[str]=[],nodes:list[Node]=[]):
@@ -154,87 +152,6 @@ def mergeWaypointGraph(value)->WaypointGraph:
             fromNodeId=convertToNodeId(mapid,nodeindex)
             toNodeId=convertToNodeId(value["map_id"],value["node_index"])
             meredGraph.setEntryPoints(fromNodeId,toNodeId)
-    return meredGraph
-
-def loadWaypointGraphData(waypointgraphdata:dict)->WaypointGraph:
-    idlist=[]
-    nodeList=[]
-    for nodeid,value in waypointgraphdata.items():
-        idlist.append(nodeid)
-        nodeList.append(convertJSONnodeToNode(nodeid,value))
-
-    return WaypointGraph(idlist,nodeList)
-
-
-
-
-def testLoadMap():
-    data=loadJSONFile("../test_run/sample_data/waypointgraph.json")
-    graph=loadWaypointGraphData(data)
-    #print(convertWaypointGraphToJSON(graph))
-    return graph
-
-def preprocess():
-
-    spacing=5
-    filepath = Path("src/routing_agent/routing_agent/preprocess_maps/waypoint_graph_raw.yaml")
-
-    yamlFile=ConvertDataFormat.loadYAMLFile(filepath)
-    maps = yamlFile["entry_points"]
-    graph=WaypointGraph()
-    for map in maps:
-        mapId = map["map_id"]
-        id = []
-        index=0
-        nodeList = []
-        lastEnd=Vector3(-1,-1,-1)
-        for i in range(len(map["points"]) - 1):
-            start = Vector3(map["points"][i]["coordinates"][0], map["points"][i]["coordinates"][1])
-            end = Vector3(map["points"][i + 1]["coordinates"][0], map["points"][i + 1]["coordinates"][1])
-            nodes = PreprocessToolkit.generate_intermediate_nodes_index(start, end, spacing)
-            if(lastEnd==start):
-                nodes=nodes[1::]
-
-            for n in nodes:
-                nodeid=generateNodeId(mapId,index)
-                node=Node(id=nodeid,locallocation=n,mapid=mapId,isentrypoint=False)
-                nodeList.append(node)
-                index+=1
-
-            lastEnd=end
-
-        for i in range(len(nodeList)-1):
-            connectTwoNodes(nodeList[i],nodeList[i+1])
-            print(nodeList[i].id)
-            print(nodeList[i].edges)
-            graph.addNode(nodeList[i])
-        graph.addNode(nodeList[len(nodeList)-1])
-
-    print(graph.convertToJSON())
-
-    graph.setEntryPoints("000_005","001_000")
-    graph.setEntryPoints("001_008", "003_000")
-    graph.setEntryPoints("001_015", "002_000")
-    graph.setEntryPoints("003_019", "004_000")
-    graph.setEntryPoints("004_012", "003_019")
-
-    print(graph.convertToJSON())
-    saveJSONAt(graph.convertToJSON(), "test.json")
-    return graph
-
-
-
-        #for i in id:
-    #new={}
-    #new["merged_file_data"]=yamlFile
-    #new["merged_file_location"]="test"
-    #print(convertWaypointGraphToJSON(graph))
-    
-    #graph=mergeWaypointGraph(new)
-   # print(graph.convertToJSON())
-    #saveJSONAt(graph.convertToJSON(),"test.json")
-    #return graph
-    
     
 
 
