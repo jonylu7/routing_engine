@@ -1,10 +1,15 @@
-from ConvertDataFormat import loadJSONFile,saveJSONAt
+
 import math
 #from LoadToolkit import loadWaypointGraphData
 indoor="waypointgraph_indoor"
 new="waypointgraph_new_1"
 outdoor="waypointgraph_outdoor"
 og="waypointgraph"
+
+import sys
+sys.path.append("../routing_agent/routing_agent/utils/")
+#import WaypointGraph
+from ConvertDataFormat import loadJSONFile,saveJSONAt
 
 
 def ConvertAutomatically(from_path,to_path):
@@ -156,7 +161,9 @@ def getIdAndIndexByNodeId(nodeid):
     mapid,index=nodeid.split("_")
     return mapid,index
 
-def getMapIdByNodeId(nodeid):
+def getMapIdByNodeId(nodeid):            
+            
+           
     mapid,_=nodeid.split("_")
     return mapid
 
