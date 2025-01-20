@@ -4,14 +4,16 @@ import time
 import launch
 import launch_testing.actions
 import rclpy
-import routing_agent.NavClient
+from routing_agent.NavClient import NavClient
 from turtlesim.msg import Pose
 from launch.event_handlers import OnProcessExit,OnExecutionComplete,OnProcessStart
 from launch import LaunchDescription
 from launch.actions import RegisterEventHandler
 from launch.actions import DeclareLaunchArgument,ExecuteProcess
-import routing_agent
+#import pytest
+import launch_testing
 
+@launch_testing.markers.keep_alive
 def generate_test_description():
 
     runServer=ExecuteProcess(cmd=[['ros2 run routing_agent server']],shell=True)
@@ -27,6 +29,12 @@ def generate_test_description():
         )
     )
 
+    process_3_after_2 = RegisterEventHandler(
+        OnExecutionComplete(
+            target_action=loadGraphArg,
+            on_completion=[loadTaskAndVehicleArg]
+        )
+    )
     process_3_after_2 = RegisterEventHandler(
         OnExecutionComplete(
             target_action=loadGraphArg,
@@ -52,7 +60,7 @@ class TestRoutingEngineWithNew1Map(unittest.TestCase):
         rclpy.shutdown()
 
     def setUp(self):
-        self.node = routing_agent.NavClient()
+        self.node = NavClient()
 
     def tearDown(self):
         self.node.destroy_node()

@@ -1,6 +1,6 @@
-from Vector import Vector3
-from Node import Node
-from utils.PreprocessToolkit import *
+from routing_agent.Vector import Vector3
+from routing_agent.Node import Node
+from routing_agent.utils.PreprocessToolkit import *
 import routing_agent.utils.FindPath as FindPath
 
 class WaypointGraph:

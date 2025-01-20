@@ -17,7 +17,7 @@ class NavClient(Node):
         
                                            # CHANG
     def send_request(self,arg:list=None):
-        if(arg!=None):
+        if(arg==None):
             self.loadCanArrive(sys.argv[1])
             self.req.i_am_at=sys.argv[2]
         else:

@@ -1,7 +1,7 @@
 from Vector import Vector3
 import math
-from routing_agent.routing_agent.utils.PreprocessToolkit import *
-from ConvertDataFormat import *
+from routing_agent.utils.PreprocessToolkit import *
+from routing_agent.utils.ConvertDataFormat import *
 from pathlib import Path
 
 def generate_intermediate_nodes_index(startVector, endVector, spacing):

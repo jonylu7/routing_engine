@@ -1,5 +1,5 @@
-from WaypointGraph import WaypointGraph
-from Vehicle import Vehicle
+from routing_agent.WaypointGraph import WaypointGraph
+from routing_agent.Vehicle import Vehicle
 from routing_agent.utils.PreprocessToolkit import *
 
 def loadVehiclesData(waypointGraph:WaypointGraph,vehicledata):

@@ -16,7 +16,7 @@ class RoutingClient(Node):
         
 
     def send_request(self,arg:list=None):
-        if(arg!=None):
+        if(arg==None):
             orders_file_location=sys.argv[1]
             vehicle_data_location=sys.argv[2]
         else:

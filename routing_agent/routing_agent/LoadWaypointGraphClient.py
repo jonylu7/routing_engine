@@ -18,7 +18,7 @@ class LoadWaypointGraphClient(Node):
                                            # CHANG
 
     def send_request(self,arg:list=None):
-        if(arg!=None):
+        if(arg==None):
             self.req.waypoint_graph_data=ConvertDataFormat.loadJSONFileToStr(sys.argv[1])
         else:
             self.req.waypoint_graph_data=ConvertDataFormat.loadJSONFileToStr(arg[0])

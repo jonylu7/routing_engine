@@ -245,6 +245,10 @@ def convertToNodeId(mapid:any,nodeindex:any)->str:
     nodeId="{:03}".format(mapindex)+"_"+"{:03}".format(nodeindex)
     return nodeId
 
+def getIdAndIndexByNodeId(nodeid):
+    mapid,index=nodeid.split("_")
+    return mapid,index
+
 def getMapIdByNodeId(nodeid):
     mapid,_=nodeid.split("_")
     return mapid
