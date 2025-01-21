@@ -2,15 +2,12 @@ import tkinter as tk
 from PIL import Image, ImageTk
 
 import os, sys
-
-#Following lines are for assigning parent directory dynamically.
-
 dir_path = os.path.dirname(os.path.realpath(__file__))
 dir_dir_path=os.path.dirname(os.path.realpath(dir_path))
 parent_dir_path = os.path.abspath(os.path.join(dir_dir_path, os.pardir))
 
 sys.path.insert(0, parent_dir_path)
-
+#This looks dumb, fix it someday
 from routing_engine.routing_agent.routing_agent.WaypointGraph import WaypointGraph
 
 

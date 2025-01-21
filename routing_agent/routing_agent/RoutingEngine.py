@@ -5,7 +5,7 @@ from routing_agent.Node import Node
 from routing_agent.utils.PreprocessToolkit import *
 from routing_agent.Task import Task
 from routing_agent.Vehicle import Vehicle
-from routing_agent.LoadToolkit import *
+from routing_agent.utils.LoadToolkit import *
 import routing_agent.utils.FindPath as FindPath
 class RoutingEngine:
     occupiedEdgeMatrix:np.array

@@ -6,10 +6,14 @@ new="waypointgraph_new_1"
 outdoor="waypointgraph_outdoor"
 og="waypointgraph"
 
-import sys
-sys.path.append("../routing_agent/routing_agent/utils/")
+import os, sys
+dir_path = os.path.dirname(os.path.realpath(__file__))
+dir_dir_path=os.path.dirname(os.path.realpath(dir_path))
+parent_dir_path = os.path.abspath(os.path.join(dir_dir_path, os.pardir))
+
+sys.path.insert(0, parent_dir_path)
 #import WaypointGraph
-from ConvertDataFormat import loadJSONFile,saveJSONAt
+from routing_engine.routing_agent.routing_agent.utils.ConvertDataFormat import loadJSONFile,saveJSONAt
 
 
 def ConvertAutomatically(from_path,to_path):

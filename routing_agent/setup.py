@@ -12,7 +12,7 @@ setup(
         ('share/' + package_name, ['package.xml']),
         ('share/' + package_name, ['launch/InitAndRun.launch.py']),
          ('share/' + package_name, ['launch/RunServer.launch.py']),
-        #('lib/' + package_name, [package_name+'/__init__.py']),
+        ('lib/' + package_name, [package_name+'/__init__.py']),
         ('lib/' + package_name, [package_name+'/Task.py']),
         ('lib/' + package_name, [package_name+'/Vehicle.py']),
          ('lib/' + package_name, [package_name+'/Vector.py']),
@@ -25,7 +25,7 @@ setup(
           ('lib/' + package_name, [package_name+'/MergeWaypointGraphClient.py']),
           ('lib/' + package_name, [package_name+'/NavClient.py']),
          ('lib/' + package_name, [package_name+'/RoutingServer.py']),
-         ('lib/' + package_name, [package_name+'/LoadToolkit.py']),
+        
 
 #('lib/' + package_name+"/test", ['test/test_routingengine_with_indoor.py']),
 ('lib/'+ package_name, ['test/test_routingengine_with_new_1.py']),
@@ -36,6 +36,7 @@ setup(
  ('lib/' + package_name+"/utils", [package_name+'/utils/FindPath.py']),
  ('lib/' + package_name+"/utils", [package_name+'/utils/OR.py']),
   ('lib/' + package_name+"/utils", [package_name+'/utils/ConvertDataFormat.py']),
+   ('lib/' + package_name+"/utils", [package_name+'/utils/LoadToolkit.py']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,

@@ -1,3 +1,10 @@
+import os, sys
+dir_path = os.path.dirname(os.path.realpath(__file__))
+dir_dir_path=os.path.dirname(os.path.realpath(dir_path))
+parent_dir_path = os.path.abspath(os.path.join(dir_dir_path, os.pardir))
+
+sys.path.insert(0, parent_dir_path)
+
 from routing_agent.WaypointGraph import WaypointGraph
 from routing_agent.Vehicle import Vehicle
 from routing_agent.utils.PreprocessToolkit import *
