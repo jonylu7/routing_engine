@@ -3,12 +3,11 @@ from PIL import Image, ImageTk
 
 import os, sys
 dir_path = os.path.dirname(os.path.realpath(__file__))
-dir_dir_path=os.path.dirname(os.path.realpath(dir_path))
-parent_dir_path = os.path.abspath(os.path.join(dir_dir_path, os.pardir))
+parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
 
 sys.path.insert(0, parent_dir_path)
 #This looks dumb, fix it someday
-from routing_engine.routing_agent.routing_agent.WaypointGraph import WaypointGraph
+from routing_agent.routing_agent.WaypointGraph import WaypointGraph
 
 
 def calculateDistance(from_location, to_location):
@@ -23,6 +22,7 @@ class DrawingApp:
     nodes={0:[0]}
     currentMapId=0
     modevalue=0
+    
     w=WaypointGraph()
     print(w.convertToJSON())
     def __init__(self, root):
@@ -58,12 +58,24 @@ class DrawingApp:
         self.decrease_map_id = tk.Button(self.root, text="Decrease MapId", command=self.decreaseMapId)
         self.decrease_map_id.pack()
 
+
+
+        # zoom
+        self.zoom_factor = 1.0  # Initial zoom level
+
         # Bind mouse events
         self.canvas.bind("<Button-1>", self.on_click)  # Left click for dots
         self.canvas.bind("<B1-Motion>", self.on_drag)  # Hold left click to draw lines
         self.canvas.bind("<ButtonRelease-1>", self.stop_drag)
         self.canvas.bind("<Motion>", self.on_hover)  # Hover motion event
+        self.root.bind("<MouseWheel>", self.zoom)
 
+    def scaleImage(self,image):
+        """Scale the image to the current zoom factor and return a PhotoImage."""
+        new_width = int(self.img_width * self.zoom_factor)
+        new_height = int(self.img_height * self.zoom_factor)
+        scaled_image = self.image.resize((new_width, new_height), Image.ANTIALIAS)
+        return ImageTk.PhotoImage(scaled_image)
 
     def createDots(self,x,y):
         too_close=False
@@ -178,6 +190,25 @@ class DrawingApp:
         self.currentMapId+=1
     def decreaseMapId(self):
         self.currentMapId-=1
+
+
+    def zoom(self, event):
+
+        """Zoom in or out based on mouse wheel direction."""
+        zoom_increment = 0.1  # Change in zoom per scroll step
+
+        # Adjust the zoom factor
+        if event.delta > 0:  # Scroll up to zoom in
+            self.zoom_factor += zoom_increment
+        elif event.delta < 0:  # Scroll down to zoom out
+            self.zoom_factor = max(self.zoom_factor - zoom_increment, 0.1)  # Prevent zero/negative zoom
+
+        # Update the scaled image
+        self.display_image = self.get_scaled_image()
+        self.canvas.itemconfig(self.canvas_image, image=self.display_image)
+
+        # Center the image (optional)
+        self.canvas.config(scrollregion=self.canvas.bbox(tk.ALL))
 
 
 

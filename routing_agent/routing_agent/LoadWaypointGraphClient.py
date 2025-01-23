@@ -2,7 +2,9 @@ from routing_agent_interfaces.srv import LoadWaypointGraphServiceMsg            
 import sys
 import rclpy
 from rclpy.node import Node
-import routing_agent.utils.ConvertDataFormat as ConvertDataFormat
+
+from routing_agent.utils import ConvertDataFormat
+
 import json
 
 

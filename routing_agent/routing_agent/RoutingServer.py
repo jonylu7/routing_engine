@@ -6,7 +6,6 @@ from routing_agent.utils.ConvertDataFormat import convertJSONToStr,convertStrToJ
 from routing_agent.WaypointGraph import WaypointGraph,mergeWaypointGraph
 from routing_agent.RoutingEngine import RoutingEngine
 from routing_agent.utils.LoadToolkit import loadTasksData,loadVehiclesData,loadWaypointGraphData
-import sys
 
 class RoutingServer(Node):
     isWaypointGraphLoaded=False
@@ -28,7 +27,7 @@ class RoutingServer(Node):
             self.waypointGraph=mergeWaypointGraph(mapsConfigData)
             response.global_waypoint_graph_file_data=convertJSONToStr(self.waypointGraph.convertToJSON())
             saveJSONAt(self.waypointGraph.convertToJSON(),mapSaveLocation)
-            response.global_waypoint_graph_file_location=mapSaveLocation
+            response.global_waypoint_graphrouting_agent_file_location=mapSaveLocation
             response.can_merge=True
         except:
             response.can_merge=False
